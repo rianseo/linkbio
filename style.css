@@ -3,8 +3,8 @@ html {
     -webkit-text-size-adjust: 100%;
 }
 
-@font-face{font-family:'PolySans';font-weight:400;font-style:normal;font-display:swap;src:local('Open Sauce One Regular'),url('/font/flaticon/PolySans-Neutral.woff2') format('woff2');}
-@font-face{font-family:'PolySans';font-weight:600;font-style:normal;font-display:swap;src:local('Open Sauce One ExtraBold'),url('/font/flaticon/PolySans-Median.woff2') format("woff2");}
+@font-face{font-family:'PolySans';font-weight:400;font-style:normal;font-display:swap;src:local('Open Sauce One Regular'),url('/font/PolySans-Neutral.woff2') format('woff2');}
+@font-face{font-family:'PolySans';font-weight:600;font-style:normal;font-display:swap;src:local('Open Sauce One ExtraBold'),url('/font/PolySans-Median.woff2') format("woff2");}
 
 .widget-head h1 {font-family: PolySans, sans-serif;}
 
