@@ -12,7 +12,13 @@ body {
     word-break: break-word;
     word-wrap: break-word;
 }
-
+hr {box-sizing: content-box;
+    overflow: visible;
+    border: 0;
+    width: 1px;
+    height: 24px;
+    background: #454545;
+   }
 a {
     background-color: transparent;
 }
