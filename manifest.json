@@ -1,0 +1,42 @@
+{
+  "name": "Rian seo – Blogger Template Customization & Web Designer",
+  "short_name": "Rian seo",
+  "description": "Digital Creator & Blogger Specialist providing professional Blogger template customization, responsive web design, speed optimization, and SEO setup worldwide.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#212121",
+  "theme_color": "#212121",
+  "icons": [
+    {
+      "src": "/images/linkbio-icon-72x.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/linkbio-icon-152x.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/linkbio-icon-167x.png",
+      "sizes": "167x167",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/linkbio-icon-180x.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/linkbio-icon-512x.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
