@@ -38,6 +38,177 @@ img {
     visibility: hidden;
 }
 
+/* ========================================
+   Bio Animation
+======================================== */
+
+.img_story {
+  animation: profilePulse 4s ease-in-out infinite;
+}
+
+@keyframes profilePulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 0 rgba(135, 230, 75, 0));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 7px rgba(135, 230, 75, .28));
+  }
+}
+
+
+/* Name shine */
+
+.widget-flex .title {
+  position: relative;
+  overflow: hidden;
+}
+
+.widget-flex .title::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: -40%;
+  width: 25%;
+  height: 140%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.55),
+    transparent
+  );
+  transform: skewX(-18deg);
+  pointer-events: none;
+  animation: nameShine 5s ease-in-out infinite;
+}
+
+@keyframes nameShine {
+  0%, 65% {
+    left: -40%;
+  }
+
+  100% {
+    left: 125%;
+  }
+}
+
+
+/* Social icons entrance */
+
+.widget-sosial li {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: socialReveal .45s ease forwards;
+}
+
+.widget-sosial li:nth-child(1) {
+  animation-delay: .15s;
+}
+
+.widget-sosial li:nth-child(2) {
+  animation-delay: .22s;
+}
+
+.widget-sosial li:nth-child(3) {
+  animation-delay: .29s;
+}
+
+.widget-sosial li:nth-child(4) {
+  animation-delay: .36s;
+}
+
+.widget-sosial li:nth-child(5) {
+  animation-delay: .43s;
+}
+
+@keyframes socialReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Bio cards */
+
+.bioLink-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity .55s ease,
+    transform .55s ease;
+}
+
+.bioLink-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* Card hover */
+
+.bioLink-item > a {
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.bioLink-item > a:hover {
+  transform: translateY(-2px);
+}
+
+
+/* Icon hover */
+
+.bioLink-item .bio-icon {
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.bioLink-item > a:hover .bio-icon {
+  transform: scale(1.05);
+}
+
+
+/* Arrow */
+
+.bioLink-item .item-visit {
+  transition: transform .25s ease;
+}
+
+.bioLink-item > a:hover .item-visit {
+  transform: translateX(3px);
+}
+
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .img_story,
+  .widget-flex .title::after,
+  .widget-sosial li {
+    animation: none;
+  }
+
+  .widget-sosial li {
+    opacity: 1;
+    transform: none;
+  }
+
+  .bioLink-item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .bioLink-item > a,
+  .bioLink-item .bio-icon,
+  .bioLink-item .item-visit {
+    transition: none;
+  }
+}
 
 /* =========================
    CONTAINER
