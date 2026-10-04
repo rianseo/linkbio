@@ -38,63 +38,7 @@ img {
     visibility: hidden;
 }
 
-/* ========================================
-   Bio Animation
-======================================== */
-
-.img_story {
-  animation: profilePulse 4s ease-in-out infinite;
-}
-
-@keyframes profilePulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 0 rgba(135, 230, 75, 0));
-  }
-
-  50% {
-    filter: drop-shadow(0 0 7px rgba(135, 230, 75, .28));
-  }
-}
-
-
-/* Name shine */
-
-.widget-flex .title {
-  position: relative;
-  overflow: hidden;
-}
-
-.widget-flex .title::after {
-  content: "";
-  position: absolute;
-  top: -20%;
-  left: -40%;
-  width: 25%;
-  height: 140%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,.55),
-    transparent
-  );
-  transform: skewX(-18deg);
-  pointer-events: none;
-  animation: nameShine 5s ease-in-out infinite;
-}
-
-@keyframes nameShine {
-  0%, 65% {
-    left: -40%;
-  }
-
-  100% {
-    left: 125%;
-  }
-}
-
-
 /* Social icons entrance */
-
 .widget-sosial li {
   opacity: 0;
   transform: translateY(8px);
@@ -146,7 +90,6 @@ img {
 
 
 /* Card hover */
-
 .bioLink-item > a {
   transition:
     transform .25s ease,
@@ -156,7 +99,6 @@ img {
 .bioLink-item > a:hover {
   transform: translateY(-2px);
 }
-
 
 /* Icon hover */
 
@@ -172,11 +114,9 @@ img {
 
 
 /* Arrow */
-
 .bioLink-item .item-visit {
   transition: transform .25s ease;
 }
-
 .bioLink-item > a:hover .item-visit {
   transform: translateX(3px);
 }
@@ -392,11 +332,6 @@ ul.social li:hover {
     position: relative;
     margin: 16px 0;
     border-radius: 24px;
-    transition: transform 0.15s cubic-bezier(0.17, 0.67, 0.29, 2.71);
-}
-
-.bioLink-item:hover {
-    transform: translate3d(0, 0, 0) scale(1.015);
 }
 
 .bioLink-item a {
