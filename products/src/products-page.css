@@ -5,8 +5,9 @@ html{line-height:1.15;-webkit-text-size-adjust:100%}
     outline: none;
     text-decoration: none;
 }
-	body{margin:0;padding:0;background: #131212;color:#ccc;font-family:Inter, sans-serif;}
-  
+	body{margin:0;padding:0;background: #131212;color:#ccc;font-family: PolySans, sans-serif;}
+  @font-face{font-family:'PolySans';font-weight:400;font-style:normal;font-display:swap;src:local('PolySans Regular'),url('/font/PolySans-Neutral.woff2') format('woff2');}
+@font-face{font-family:'PolySans';font-weight:600;font-style:normal;font-display:swap;src:local('PolySans Bold'),url('/font/PolySans-Median.woff2') format("woff2");}
 .product-slider {
   position: relative;
   overflow: hidden;touch-action: pan-y;
@@ -130,7 +131,7 @@ html{line-height:1.15;-webkit-text-size-adjust:100%}
     border-radius: 24px 24px 0 0;gap:24px;}
   
   .product-content::before {
-    content: &quot;&quot;;
+    content: "";
     position: absolute;
     top: 10px;
     left: 50%;
