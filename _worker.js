@@ -85,6 +85,38 @@ ${urls.join('')}
       });
     }
 
+    // SHOP PAGE
+if (url.pathname === '/shop' || url.pathname === '/shop/') {
+
+  const shopURL = new URL(
+    '/shop/category.html',
+    request.url
+  );
+
+  const response = await env.ASSETS.fetch(
+    new Request(shopURL.toString(), {
+      method: 'GET'
+    })
+  );
+
+  if (!response.ok) {
+    return new Response('Shop page not found.', {
+      status: 404,
+      headers: {
+        'content-type': 'text/plain; charset=UTF-8'
+      }
+    });
+  }
+
+  return new Response(response.body, {
+    status: 200,
+    headers: {
+      'content-type': 'text/html; charset=UTF-8',
+      'cache-control': 'no-cache'
+    }
+  });
+}
+    
     /*
      * =========================
      * PRODUCT PAGE
