@@ -27,22 +27,22 @@ document.addEventListener('DOMContentLoaded', function () {
    *      nstore
    */
 
-  const path = window.location.pathname.replace(/\/+$/, '');
-
-let productSlug = null;
-
-if (path.startsWith('/products/')) {
-  const slug = path.split('/').pop();
-
-  if (slug !== 'product' && slug !== 'product.html') {
-    productSlug = slug;
-  }
-}
+  const params = new URLSearchParams(window.location.search);
+const productSlug = params.get('slug');
 
 if (!productSlug) {
   console.error('Product slug not found.');
   return;
 }
+
+fetch('/products/data/' + productSlug + '.json')
+  .then(function (response) {
+    if (!response.ok) {
+      throw new Error('Product data not found: ' + productSlug);
+    }
+
+    return response.json();
+  })
 
   fetch('/products/data/' + productSlug + '.json')
     .then(function (response) {
