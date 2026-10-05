@@ -1,1 +1,23 @@
 
+{
+  "name": "NStore",
+  "category": "eCommerce",
+  "price": "$13.99",
+  "oldPrice": "$26.95",
+  "description": [
+    "NStore adalah template blogger toko online serba guna.",
+    "Dirancang semudah mungkin dan seringan mungkin untuk di akses dengan perangkat dan jaringan apapun."
+  ],
+  "features": [
+    "SEO Frendly",
+    "Mobile Frendly",
+    "Minimalist"
+  ],
+  "images": [
+    "https://public-files.gumroad.com/6zbc8ykb87wyy04ayvzo6yd3arf7",
+    "https://public-files.gumroad.com/q24ky4eenzmh28ucekcb2twx3ytk",
+    "https://public-files.gumroad.com/nrp11ow3v7584u6mx5zk7o6xc8ms"
+  ],
+  "demo": "#",
+  "buy": "#"
+}
