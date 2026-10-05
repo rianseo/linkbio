@@ -1,3 +1,2 @@
 /products/linkbio /products/product.html 200
 /products/nstore /products/product.html 200
-/products/data/* /products/data/:splat 200
