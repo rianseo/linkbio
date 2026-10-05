@@ -3,16 +3,104 @@ export default {
     const url = new URL(request.url);
 
     /*
-     * Product URL
-     *
+     * =========================
+     * ROBOTS.TXT
+     * =========================
      */
-    const match = url.pathname.match(/^\/products\/([^/]+)\/?$/);
+    if (url.pathname === '/robots.txt') {
+      const robots = [
+        'User-agent: *',
+        'Allow: /',
+        '',
+        'Sitemap: ' + url.origin + '/sitemap.xml'
+      ].join('\n');
+
+      return new Response(robots, {
+        status: 200,
+        headers: {
+          'content-type': 'text/plain; charset=UTF-8',
+          'cache-control': 'public, max-age=3600'
+        }
+      });
+    }
+
+    /*
+     * =========================
+     * SITEMAP.XML
+     * =========================
+     */
+    if (url.pathname === '/sitemap.xml') {
+
+      const products = [
+        'linkbio',
+        'nstore',
+        'iqone',
+        'game'
+      ];
+
+      const urls = [
+        `
+        <url>
+          <loc>${url.origin}/</loc>
+        </url>
+        `
+      ];
+
+      for (const slug of products) {
+
+        const dataURL = new URL(
+          '/products/data/' + slug + '.json',
+          request.url
+        );
+
+        const response = await env.ASSETS.fetch(
+          new Request(dataURL.toString(), {
+            method: 'GET'
+          })
+        );
+
+        if (!response.ok) {
+          continue;
+        }
+
+        urls.push(`
+        <url>
+          <loc>${url.origin}/products/${slug}</loc>
+        </url>
+        `);
+      }
+
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.join('')}
+</urlset>`;
+
+      return new Response(sitemap, {
+        status: 200,
+        headers: {
+          'content-type': 'application/xml; charset=UTF-8',
+          'cache-control': 'public, max-age=3600'
+        }
+      });
+    }
+
+    /*
+     * =========================
+     * PRODUCT PAGE
+     * =========================
+     */
+
+    const match = url.pathname.match(
+      /^\/products\/([^/]+)\/?$/
+    );
 
     if (match && match[1] !== 'product') {
+
       const slug = match[1];
 
       /*
-       * Ambil product.json
+       * Ambil product JSON
        */
       const dataURL = new URL(
         '/products/data/' + slug + '.json',
@@ -62,8 +150,11 @@ export default {
       let html = await templateResponse.text();
 
       /*
-       * Product data
+       * =========================
+       * PRODUCT DATA
+       * =========================
        */
+
       const title = data.name || 'Blogger Template';
 
       const description = Array.isArray(data.description)
@@ -79,19 +170,26 @@ export default {
         url.origin + '/products/' + slug;
 
       /*
-       * Escape HTML attribute
+       * =========================
+       * ESCAPE HTML
+       * =========================
        */
+
       function escapeHTML(value) {
         return String(value)
           .replace(/&/g, '&amp;')
           .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;')
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
       }
 
       /*
-       * Replace SEO placeholders
+       * =========================
+       * SEO META
+       * =========================
        */
+
       html = html.replaceAll(
         '{{PRODUCT_TITLE}}',
         escapeHTML(title)
@@ -113,8 +211,11 @@ export default {
       );
 
       /*
-       * Masukkan slug ke <body>
+       * =========================
+       * PRODUCT SLUG
+       * =========================
        */
+
       html = html.replace(
         /<body([^>]*)>/i,
         '<body$1 data-product-slug="' +
@@ -132,8 +233,11 @@ export default {
     }
 
     /*
-     * Semua request lainnya
+     * =========================
+     * OTHER REQUESTS
+     * =========================
      */
+
     return env.ASSETS.fetch(request);
   }
 };
