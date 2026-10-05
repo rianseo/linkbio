@@ -2,32 +2,51 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === '/debug-product') {
-      const assetURL = new URL('/products/product.html', request.url);
+    const match = url.pathname.match(/^\/products\/([^/]+)\/?$/);
 
-      const response = await env.ASSETS.fetch(
-        new Request(assetURL, request)
+    if (match && match[1] !== 'product') {
+      const slug = match[1];
+
+      const assetURL = new URL(
+        '/products/product.html',
+        request.url
       );
+
+      const assetRequest = new Request(
+        assetURL.toString(),
+        {
+          method: 'GET'
+        }
+      );
+
+      const response = await env.ASSETS.fetch(assetRequest);
+
+      if (!response.ok) {
+        return new Response(
+          'Product template not found.',
+          {
+            status: 404,
+            headers: {
+              'content-type': 'text/plain; charset=UTF-8'
+            }
+          }
+        );
+      }
 
       let html = await response.text();
 
-      const bodyMatch = html.match(/<body[^>]*>/i);
-
-      return new Response(
-        JSON.stringify({
-          host: url.hostname,
-          status: response.status,
-          bodyTag: bodyMatch ? bodyMatch[0] : null,
-          hasProductSlug: /data-product-slug/i.test(html),
-          htmlLength: html.length
-        }, null, 2),
-        {
-          headers: {
-            'content-type': 'application/json; charset=UTF-8',
-            'cache-control': 'no-store'
-          }
-        }
+      html = html.replace(
+        /<body([^>]*)>/i,
+        '<body$1 data-product-slug="' + slug + '">'
       );
+
+      return new Response(html, {
+        status: 200,
+        headers: {
+          'content-type': 'text/html; charset=UTF-8',
+          'cache-control': 'no-cache'
+        }
+      });
     }
 
     return env.ASSETS.fetch(request);
