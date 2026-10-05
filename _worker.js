@@ -8,18 +8,15 @@ export default {
       const slug = match[1];
 
       const assetURL = new URL(
-        '/products/product.html',
+        '/products/',
         request.url
       );
 
-      const assetRequest = new Request(
-        assetURL.toString(),
-        {
+      const response = await env.ASSETS.fetch(
+        new Request(assetURL.toString(), {
           method: 'GET'
-        }
+        })
       );
-
-      const response = await env.ASSETS.fetch(assetRequest);
 
       if (!response.ok) {
         return new Response(
