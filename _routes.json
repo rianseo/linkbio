@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "include": [
+    "/products/*"
+  ],
+  "exclude": [
+    "/products/data/*",
+    "/products/src/*",
+    "/products/product"
+  ]
+}
