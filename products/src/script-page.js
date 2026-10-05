@@ -29,10 +29,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const path = window.location.pathname
     .replace(/\/+$/, '')
-    .split('/')
-    .pop();
 
-  const productSlug = path || 'linkbio';
+  const match = path.match(/^\/products\/([^/]+)$/);
+  const productSlug = match ? match[1] : null;
+  
+if (!productSlug || productSlug === 'product.html') {
+  console.error('Product slug not found.');
+  return;
+}
 
   fetch('/products/data/' + productSlug + '.json')
     .then(function (response) {
