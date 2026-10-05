@@ -1,6 +1,8 @@
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
+    return new Response('WORKER AKTIF');
+  }
+};
 
     /*
      * PRODUCT ROUTING
