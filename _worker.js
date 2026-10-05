@@ -2,50 +2,18 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    const match = url.pathname.match(/^\/products\/([^/]+)\/?$/);
-
-    if (match && match[1] !== 'product') {
-      const slug = match[1];
-
-      const assetURL = new URL(
-        '/products/',
-        request.url
-      );
-
-      const response = await env.ASSETS.fetch(
-        new Request(assetURL.toString(), {
-          method: 'GET'
-        })
-      );
-
-      if (!response.ok) {
-        return new Response(
-          'Product template not found.',
-          {
-            status: 404,
-            headers: {
-              'content-type': 'text/plain; charset=UTF-8'
-            }
-          }
-        );
-      }
-
-      let html = await response.text();
-
-      html = html.replace(
-        /<body([^>]*)>/i,
-        '<body$1 data-product-slug="' + slug + '">'
-      );
-
-      return new Response(html, {
-        status: 200,
+    return new Response(
+      JSON.stringify({
+        hostname: url.hostname,
+        pathname: url.pathname,
+        worker: 'PRODUCT-TEST-001'
+      }, null, 2),
+      {
         headers: {
-          'content-type': 'text/html; charset=UTF-8',
-          'cache-control': 'no-cache'
+          'content-type': 'application/json',
+          'cache-control': 'no-store'
         }
-      });
-    }
-
-    return env.ASSETS.fetch(request);
+      }
+    );
   }
 };
