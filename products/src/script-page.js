@@ -27,10 +27,13 @@ document.addEventListener('DOMContentLoaded', function () {
    *      nstore
    */
 
-  const params = new URLSearchParams(window.location.search);
-const productSlug = params.get('slug');
+  const path = window.location.pathname.replace(/\/+$/, '');
 
-if (!productSlug) {
+const match = path.match(/^\/products\/([^/]+)$/);
+
+const productSlug = match ? match[1] : null;
+
+if (!productSlug || productSlug === 'product' || productSlug === 'product.html') {
   console.error('Product slug not found.');
   return;
 }
@@ -43,15 +46,7 @@ fetch('/products/data/' + productSlug + '.json')
 
     return response.json();
   })
-
-  fetch('/products/data/' + productSlug + '.json')
-    .then(function (response) {
-      if (!response.ok) {
-        throw new Error('Product data not found: ' + productSlug);
-      }
-
-      return response.json();
-    })
+  
     .then(function (product) {
 
       /*
