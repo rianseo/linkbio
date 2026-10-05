@@ -1,0 +1,2 @@
+/products/data/* /products/data/:splat 200
+/products/* /products/product.html 200
