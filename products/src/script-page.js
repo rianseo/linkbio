@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
    *      nstore
    */
 
-const productSlug = window.PRODUCT_SLUG || null;
+const productSlug = document.body.dataset.productSlug || null;
 
 if (!productSlug) {
   console.error('Product slug not found.');
