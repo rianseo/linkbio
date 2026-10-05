@@ -1,2 +1,2 @@
-/products/linkbio /products/product.html 200
-/products/nstore /products/product.html 200
+/products/linkbio /products/product?slug=linkbio 200
+/products/nstore /products/product?slug=nstore 200
