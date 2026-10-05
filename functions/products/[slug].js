@@ -5,9 +5,9 @@ export async function onRequestGet(context) {
     return context.next();
   }
 
-  const productUrl = new URL(context.request.url);
+  const url = new URL(context.request.url);
 
-  productUrl.pathname = '/products/product.html';
+  url.pathname = '/products/product';
 
-  return context.env.ASSETS.fetch(productUrl);
+  return context.env.ASSETS.fetch(url);
 }
