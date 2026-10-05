@@ -7,7 +7,6 @@ export default {
     if (match) {
       const slug = match[1];
 
-      // Jangan intercept template utama
       if (slug !== 'product') {
         const templateURL = new URL(request.url);
         templateURL.pathname = '/products/product';
@@ -26,20 +25,12 @@ export default {
 
         let html = await response.text();
 
-        const safeSlug = JSON.stringify(slug)
-          .replace(/</g, '\\u003c');
-
         /*
-         * Inject SEBELUM isi <head>.
-         *
-         * Ini penting agar PRODUCT_SLUG sudah tersedia
-         * sebelum script-page.js dijalankan.
+         * Masukkan slug ke <body>
          */
         html = html.replace(
-          /<head([^>]*)>/i,
-          '<head$1><script>window.PRODUCT_SLUG=' +
-          safeSlug +
-          ';</script>'
+          /<body([^>]*)>/i,
+          '<body$1 data-product-slug="' + slug + '">'
         );
 
         const headers = new Headers(response.headers);
