@@ -6,15 +6,18 @@ export default {
       const assetURL = new URL('/products/product.html', request.url);
 
       const response = await env.ASSETS.fetch(
-        new Request(assetURL, request)
+        new Request(assetURL, {
+          method: 'GET',
+          headers: request.headers
+        })
       );
 
       return new Response(
         JSON.stringify({
           host: url.hostname,
-          path: url.pathname,
           assetURL: assetURL.href,
           status: response.status,
+          location: response.headers.get('location'),
           contentType: response.headers.get('content-type'),
           cacheStatus: response.headers.get('cf-cache-status')
         }, null, 2),
