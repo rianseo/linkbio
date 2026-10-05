@@ -2,24 +2,24 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === '/debug-assets') {
+    if (url.pathname === '/debug-product') {
       const assetURL = new URL('/products/product.html', request.url);
 
       const response = await env.ASSETS.fetch(
-        new Request(assetURL, {
-          method: 'GET',
-          headers: request.headers
-        })
+        new Request(assetURL, request)
       );
+
+      let html = await response.text();
+
+      const bodyMatch = html.match(/<body[^>]*>/i);
 
       return new Response(
         JSON.stringify({
           host: url.hostname,
-          assetURL: assetURL.href,
           status: response.status,
-          location: response.headers.get('location'),
-          contentType: response.headers.get('content-type'),
-          cacheStatus: response.headers.get('cf-cache-status')
+          bodyTag: bodyMatch ? bodyMatch[0] : null,
+          hasProductSlug: /data-product-slug/i.test(html),
+          htmlLength: html.length
         }, null, 2),
         {
           headers: {
