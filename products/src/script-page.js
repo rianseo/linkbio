@@ -27,13 +27,13 @@ document.addEventListener('DOMContentLoaded', function () {
    *      nstore
    */
 
-  const path = window.location.pathname.replace(/\/+$/, '');
+ const path = window.location.pathname.replace(/\/+$/, '');
 
 const match = path.match(/^\/products\/([^/]+)$/);
 
 const productSlug = match ? match[1] : null;
 
-if (!productSlug || productSlug === 'product' || productSlug === 'product.html') {
+if (!productSlug || productSlug === 'product') {
   console.error('Product slug not found.');
   return;
 }
