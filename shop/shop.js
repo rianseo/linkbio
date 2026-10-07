@@ -58,53 +58,27 @@
           : (product.description || '');
 
       return `
-        <article class="product-card">
-
-          <a
-            class="product-image"
-            href="/products/${item.slug}"
-          >
-            <img
-              src="${image}"
-              alt="${product.name || ''}"
-              loading="lazy"
-              decoding="async"
-            >
-          </a>
-
-          <div class="product-content">
-
-            <span class="product-category">
-              ${product.category || 'Templates'}
-            </span>
-
-            <h3>
-              <a href="/products/${item.slug}">
-                ${product.name || ''}
-              </a>
-            </h3>
-
-            <p>
-              ${description}
-            </p>
-
-            <div class="product-footer">
-
-              <strong>
-                ${product.price || ''}
-              </strong>
-
-              <a
-                href="/products/${item.slug}"
-                class="product-link"
-              >
-                View Product
-              </a>
-
-            </div>
-
+        <article class='product-card'>
+    <a href='/products/${item.slug}' title='${product.name || ''}'>
+          <div class='product-image'>
+            <img alt='${product.name || ''}' decoding='async' loading='lazy' src='${image}'/>
+            <span class='product-category'>${product.category || 'Theme'}</span>
           </div>
-
+          <div class='product-content'>
+            <div class='entry-meta'>
+            <div class='entry-title'>
+            <h2>${product.name || ''}</h2>
+            </div>
+            <div class='product-price'>
+              <strong class='item-price'>${product.price || ''}</strong>
+              <strike class='off-price'>$26.95</strike>
+            </div>
+            </div>
+            <div class='entry-more'>
+             <svg fill='none' height='16' stroke='currentColor' stroke-width='1.8' viewBox='0 0 24 24' width='16'><path d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' stroke-linecap='round' stroke-linejoin='round'/></svg> 
+            </div>
+          </div>
+    </a>
         </article>
       `;
 
