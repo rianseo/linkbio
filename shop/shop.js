@@ -10,7 +10,8 @@
 
   const products = [
     'linkbio',
-    'nstore'
+    'nstore',
+    'iqone'
   ];
 
   /*
