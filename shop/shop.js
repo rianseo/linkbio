@@ -96,3 +96,35 @@
   });
 
 })();
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  const animatedItems = document.querySelectorAll(
+    '.product-card'
+  );
+
+  if (!animatedItems.length) return;
+
+  const observer = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        } else {
+          entry.target.classList.remove('is-visible');
+        }
+
+      });
+    },
+    {
+      threshold: 0.15,
+      rootMargin: '0px 0px -40px 0px'
+    }
+  );
+
+  animatedItems.forEach(function (item) {
+    observer.observe(item);
+  });
+
+});
