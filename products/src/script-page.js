@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const productCategory = document.querySelector('.product-category');
   const itemPrice = document.querySelector('.item-price');
   const offPrice = document.querySelector('.off-price');
-  const productPrice = document.querySelector('.content-price');
+  const productPrice = document.querySelector('.entry-title');
   const productDescription = document.querySelector('.product-description');
   const productImages = document.querySelector('.product-image');
   const demoButton = document.querySelector('.icon-buy');
@@ -19,16 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
   /*
    * Ambil nama file dari URL
    *
-   * /products/linkbio
-   *        ↓
-   *      linkbio
-   *
-   * /products/nstore
-   *        ↓
-   *      nstore
    */
-
-  const productSlug =
+const productSlug =
     document.body.dataset.productSlug || null;
 
   if (!productSlug) {
@@ -36,7 +28,81 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
+  /*
+   * ==========================================
+   * GUMROAD SALES
+   * ==========================================
+   */
 
+  if (productPrice && productSlug) {
+
+    fetch(
+      'https://sales.rianseo.workers.dev/api/sales/' +
+      encodeURIComponent(productSlug)
+    )
+
+      .then(function (response) {
+
+        if (!response.ok) {
+          throw new Error(
+            'Unable to load Gumroad sales'
+          );
+        }
+
+        return response.json();
+
+      })
+
+      .then(function (salesData) {
+
+        if (
+          !salesData.success ||
+          typeof salesData.sales === 'undefined'
+        ) {
+          return;
+        }
+
+        const sales =
+          Number(salesData.sales || 0);
+
+        const existingSales =
+          productPrice.parentNode.querySelector(
+            '.product-sales'
+          );
+
+        if (existingSales) {
+          existingSales.remove();
+        }
+
+        const salesElement =
+          document.createElement('div');
+
+        salesElement.className =
+          'product-sales';
+
+        salesElement.textContent =
+          sales === 1
+            ? '1 Sale'
+            : sales + ' Sales';
+
+        productPrice.insertAdjacentElement(
+          'afterend',
+          salesElement
+        );
+
+      })
+
+      .catch(function (error) {
+
+        console.error(
+          'Gumroad sales:',
+          error
+        );
+
+      });
+
+  }
+  
   /*
    * ==========================================
    * LOAD PRODUCT DATA
@@ -87,166 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
         offPrice.textContent =
           product.oldPrice || '';
       }
-
-
-      /*
-       * ==========================================
-       * GUMROAD SALES
-       * ==========================================
-       *
-       * Menggunakan Gumroad permalink
-       * dari post.json
-       *
-       * Contoh:
-       *
-       * "gumroadPermalink": "iqone"
-       *
-       */
-
-      if (
-        productPrice &&
-        product.gumroadPermalink
-      ) {
-
-        fetch(
-          'https://sales.rianseo.workers.dev/api/sales'
-        )
-
-          .then(function (response) {
-
-            if (!response.ok) {
-
-              throw new Error(
-                'Unable to load Gumroad sales'
-              );
-
-            }
-
-            return response.json();
-
-          })
-
-          .then(function (salesData) {
-
-            if (
-              !salesData.success ||
-              !Array.isArray(
-                salesData.products
-              )
-            ) {
-              return;
-            }
-
-
-            /*
-             * Cari produk berdasarkan
-             * Gumroad permalink
-             */
-
-            const gumroadPermalink =
-              String(
-                product.gumroadPermalink
-              )
-                .trim()
-                .toLowerCase();
-
-
-            const gumroadProduct =
-              salesData.products.find(
-                function (item) {
-
-                  return String(
-                    item.permalink || ''
-                  )
-                    .trim()
-                    .toLowerCase() ===
-                    gumroadPermalink;
-
-                }
-              );
-
-
-            /*
-             * Produk Gumroad tidak ditemukan
-             */
-
-            if (!gumroadProduct) {
-              return;
-            }
-
-
-            /*
-             * Ambil jumlah sales
-             */
-
-            const sales =
-              Number(
-                gumroadProduct.sales || 0
-              );
-
-
-            /*
-             * Hapus sales lama
-             * jika ada
-             */
-
-            const existingSales =
-              productPrice.parentNode
-                .querySelector(
-                  '.product-sales'
-                );
-
-            if (existingSales) {
-              existingSales.remove();
-            }
-
-
-            /*
-             * Buat elemen sales
-             */
-
-            const salesElement =
-              document.createElement('div');
-
-            salesElement.className =
-              'product-sales';
-
-
-            salesElement.textContent =
-              sales === 1
-                ? '1 Sale'
-                : sales + ' Sales';
-
-
-            /*
-             * Letakkan tepat di bawah
-             * harga produk
-             */
-
-            productPrice.insertAdjacentElement(
-              'afterend',
-              salesElement
-            );
-
-          })
-
-          .catch(function (error) {
-
-            /*
-             * Sales gagal tidak boleh
-             * mengganggu halaman produk
-             */
-
-            console.error(
-              'Gumroad sales:',
-              error
-            );
-
-          });
-
-      }
-
-
+      
       /*
        * ==========================================
        * DESCRIPTION
