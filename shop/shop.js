@@ -257,19 +257,14 @@
 
 
   /*
-   * Get product slug from Product URL
-   *
-   * Example:
-   * https://rianseo.site/products/linkbio
-   *
-   * Result:
-   * linkbio
+   * Get product slug
    */
   function getProductSlug(url) {
 
     try {
 
-      const parsedURL = new URL(url);
+      const parsedURL =
+        new URL(url);
 
       const match =
         parsedURL.pathname.match(
@@ -290,6 +285,57 @@
       return '';
 
     }
+
+  }
+
+
+  /*
+   * Extract Product URL
+   *
+   * Supports:
+   *
+   * Product URL:
+   * [https://rianseo.site/products/linkbio](https://rianseo.site/products/linkbio)
+   *
+   * And also:
+   *
+   * Product URL: [URL](URL)
+   */
+  function extractProductURL(text) {
+
+    /*
+     * Markdown URL anywhere in the text
+     */
+    const markdownMatch =
+      text.match(
+        /\[https?:\/\/[^\]]+\]\((https?:\/\/[^)]+)\)/i
+      );
+
+
+    if (markdownMatch) {
+
+      return markdownMatch[1];
+
+    }
+
+
+    /*
+     * Plain URL fallback
+     */
+    const plainURLMatch =
+      text.match(
+        /https?:\/\/[^\s)]+/i
+      );
+
+
+    if (plainURLMatch) {
+
+      return plainURLMatch[0];
+
+    }
+
+
+    return '';
 
   }
 
@@ -316,7 +362,11 @@
       if (!response.ok) {
 
         throw new Error(
-          'Product data not found: ' + slug
+          'Product data not found: ' +
+          slug +
+          ' (' +
+          response.status +
+          ')'
         );
 
       }
@@ -342,7 +392,10 @@
   /*
    * Create product card
    */
-  function createProductCard(product, url) {
+  function createProductCard(
+    product,
+    url
+  ) {
 
     if (!product) {
       return '';
@@ -471,7 +524,7 @@
 
 
   /*
-   * Search form
+   * Search
    */
   form.addEventListener(
     'submit',
@@ -494,9 +547,6 @@
       }
 
 
-      /*
-       * Loading
-       */
       results.innerHTML =
         '<span>Searching...</span>';
 
@@ -505,7 +555,7 @@
 
         /*
          * =========================
-         * AI SEARCH REQUEST
+         * AI SEARCH
          * =========================
          */
 
@@ -561,7 +611,7 @@
 
         /*
          * =========================
-         * LOAD PRODUCT DATA
+         * LOAD PRODUCTS
          * =========================
          */
 
@@ -574,15 +624,13 @@
 
 
               /*
-               * Extract Product URL
+               * Extract URL
                */
-              const urlMatch =
-                text.match(
-                  /Product URL:\s*\[([^\]]+)\]\((https?:\/\/[^)]+)\)/i
-                );
+              const url =
+                extractProductURL(text);
 
 
-              if (!urlMatch) {
+              if (!url) {
 
                 console.warn(
                   'Product URL not found:',
@@ -594,10 +642,6 @@
               }
 
 
-              const url =
-                urlMatch[2];
-
-
               /*
                * Extract slug
                */
@@ -607,13 +651,18 @@
 
               if (!slug) {
 
+                console.warn(
+                  'Product slug not found:',
+                  url
+                );
+
                 return null;
 
               }
 
 
               /*
-               * Load post.json
+               * Load JSON
                */
               const product =
                 await loadProduct(slug);
@@ -666,7 +715,7 @@
 
         /*
          * =========================
-         * RENDER RESULTS
+         * RENDER
          * =========================
          */
 
