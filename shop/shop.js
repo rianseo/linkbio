@@ -9,10 +9,10 @@
   }
 
   const products = [
-    'linkbio',
-    'nstore',
+    'mrv',
     'iqone',
-    'mrv'
+    'linkbio',
+    'nstore'
   ];
 
   /*
