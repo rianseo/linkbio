@@ -29,10 +29,11 @@
       function (entries) {
 
         entries.forEach(function (entry) {
+
           if (entry.isIntersecting) {
-  entry.target.classList.add('is-visible');
-  observer.unobserve(entry.target);
-}
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
 
         });
 
@@ -107,8 +108,35 @@
           ? product.description[0]
           : (product.description || '');
 
+      /*
+       * Price
+       */
+      const price =
+        product.price !== undefined &&
+        product.price !== null
+          ? product.price
+          : '';
+
+      /*
+       * Old price
+       */
+      const oldPrice =
+        product.oldPrice !== undefined &&
+        product.oldPrice !== null &&
+        String(product.oldPrice).trim() !== ''
+          ? product.oldPrice
+          : '';
+
+      /*
+       * Old price HTML
+       */
+      const oldPriceHTML = oldPrice
+        ? `<strike class='off-price'>${oldPrice}</strike>`
+        : '';
+
       return `
         <article class='product-card'>
+
           <a href='/products/${item.slug}' title='${product.name || ''}'>
 
             <div class='product-image'>
@@ -135,18 +163,19 @@
                 </div>
 
                 <div class='product-price'>
+
                   <strong class='item-price'>
-                    ${product.price || ''}
+                    ${price}
                   </strong>
 
-                  <strike class='off-price'>
-                    $26.95
-                  </strike>
+                  ${oldPriceHTML}
+
                 </div>
 
               </div>
 
               <div class='entry-more'>
+
                 <svg
                   fill='none'
                   height='16'
@@ -154,16 +183,20 @@
                   stroke-width='1.8'
                   viewBox='0 0 24 24'
                   width='16'>
+
                   <path
                     d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25'
                     stroke-linecap='round'
                     stroke-linejoin='round'/>
+
                 </svg>
+
               </div>
 
             </div>
 
           </a>
+
         </article>
       `;
 
@@ -187,5 +220,440 @@
       '<p>Unable to load products.</p>';
 
   });
+
+})();
+
+
+(function () {
+
+  'use strict';
+
+  const form = document.getElementById('aiSearchForm');
+  const input = document.getElementById('aiSearchInput');
+  const results = document.getElementById('aiSearchResults');
+
+  if (!form || !input || !results) {
+    return;
+  }
+
+  const SEARCH_API =
+    'https://search.rianseo.workers.dev/api/search';
+
+
+  /*
+   * Escape HTML
+   */
+  function escapeHTML(value) {
+
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+  }
+
+
+  /*
+   * Extract product slug
+   *
+   * Example:
+   * https://rianseo.site/products/linkbio
+   *
+   * Result:
+   * linkbio
+   */
+  function getProductSlug(url) {
+
+    try {
+
+      const parsedURL = new URL(url);
+
+      const match =
+        parsedURL.pathname.match(
+          /^\/products\/([^/]+)\/?$/
+        );
+
+      return match
+        ? decodeURIComponent(match[1])
+        : '';
+
+    } catch (error) {
+
+      return '';
+
+    }
+
+  }
+
+
+  /*
+   * Load product JSON
+   */
+  async function loadProduct(slug) {
+
+    if (!slug) {
+      return null;
+    }
+
+    try {
+
+      const response = await fetch(
+        '/products/data/' +
+        encodeURIComponent(slug) +
+        '.json'
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          'Product data not found: ' + slug
+        );
+      }
+
+      return await response.json();
+
+    } catch (error) {
+
+      console.error(
+        'Product JSON:',
+        slug,
+        error
+      );
+
+      return null;
+
+    }
+
+  }
+
+
+  /*
+   * Product card
+   */
+  function createProductCard(product, url) {
+
+    if (!product) {
+      return '';
+    }
+
+
+    const name =
+      product.name || 'Product';
+
+
+    const category =
+      product.category || 'Theme';
+
+
+    const image =
+      Array.isArray(product.images) &&
+      product.images.length
+        ? product.images[0]
+        : '';
+
+
+    const price =
+      product.price !== undefined &&
+      product.price !== null
+        ? product.price
+        : '';
+
+
+    const oldPrice =
+      product.oldPrice !== undefined &&
+      product.oldPrice !== null &&
+      String(product.oldPrice).trim() !== ''
+        ? product.oldPrice
+        : '';
+
+
+    const oldPriceHTML =
+      oldPrice
+        ? `<strike class="off-price">${escapeHTML(oldPrice)}</strike>`
+        : '';
+
+
+    const description =
+      Array.isArray(product.description)
+        ? product.description[0]
+        : (product.description || '');
+
+
+    return `
+      <article class="ai-search-item">
+
+        <a
+          class="ai-search-link"
+          href="${escapeHTML(url)}"
+          title="${escapeHTML(name)}">
+
+          ${
+            image
+              ? `
+                <div class="ai-search-image">
+
+                  <img
+                    src="${escapeHTML(image)}"
+                    alt="${escapeHTML(name)}"
+                    loading="lazy"
+                    decoding="async"
+                  />
+
+                </div>
+              `
+              : ''
+          }
+
+
+          <div class="ai-search-content">
+
+            <div class="ai-search-category">
+              ${escapeHTML(category)}
+            </div>
+
+            <h3>
+              ${escapeHTML(name)}
+            </h3>
+
+
+            ${
+              description
+                ? `
+                  <p>
+                    ${escapeHTML(description)}
+                  </p>
+                `
+                : ''
+            }
+
+
+            <div class="ai-search-price">
+
+              ${
+                price
+                  ? `
+                    <strong class="item-price">
+                      ${escapeHTML(price)}
+                    </strong>
+                  `
+                  : ''
+              }
+
+              ${oldPriceHTML}
+
+            </div>
+
+
+            <span class="ai-search-view">
+              View Product
+            </span>
+
+          </div>
+
+        </a>
+
+      </article>
+    `;
+
+  }
+
+
+  /*
+   * Search
+   */
+  form.addEventListener(
+    'submit',
+    async function (event) {
+
+      event.preventDefault();
+
+
+      const query =
+        input.value.trim();
+
+
+      if (!query) {
+
+        results.innerHTML =
+          '<span>Please enter a search query.</span>';
+
+        return;
+
+      }
+
+
+      results.innerHTML =
+        '<span>Searching...</span>';
+
+
+      try {
+
+        /*
+         * Request AI Search
+         */
+        const response =
+          await fetch(
+            SEARCH_API +
+            '?q=' +
+            encodeURIComponent(query)
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            'Search request failed'
+          );
+
+        }
+
+
+        const json =
+          await response.json();
+
+
+        if (
+          !json.success ||
+          !json.data ||
+          !Array.isArray(json.data.chunks)
+        ) {
+
+          results.innerHTML =
+            '<p>No results found.</p>';
+
+          return;
+
+        }
+
+
+        const chunks =
+          json.data.chunks;
+
+
+        if (!chunks.length) {
+
+          results.innerHTML =
+            '<p>No results found.</p>';
+
+          return;
+
+        }
+
+
+        /*
+         * Load all product JSON files
+         */
+        const productPromises =
+          chunks.map(
+            async function (chunk) {
+
+              const text =
+                chunk.text || '';
+
+
+              /*
+               * Find Product URL
+               */
+              const urlMatch =
+                text.match(
+                  /Product URL:\s*\[([^\]]+)\]\((https?:\/\/[^)]+)\)/i
+                );
+
+
+              if (!urlMatch) {
+                return null;
+              }
+
+
+              const url =
+                urlMatch[2];
+
+
+              const slug =
+                getProductSlug(url);
+
+
+              if (!slug) {
+                return null;
+              }
+
+
+              const product =
+                await loadProduct(slug);
+
+
+              if (!product) {
+                return null;
+              }
+
+
+              return {
+                product: product,
+                url: url
+              };
+
+            }
+          );
+
+
+        const products =
+          await Promise.all(
+            productPromises
+          );
+
+
+        /*
+         * Remove failed products
+         */
+        const validProducts =
+          products.filter(
+            function (item) {
+              return item !== null;
+            }
+          );
+
+
+        if (!validProducts.length) {
+
+          results.innerHTML =
+            '<p>No products found.</p>';
+
+          return;
+
+        }
+
+
+        /*
+         * Render
+         */
+        results.innerHTML =
+          validProducts
+            .map(function (item) {
+
+              return createProductCard(
+                item.product,
+                item.url
+              );
+
+            })
+            .join('');
+
+
+      } catch (error) {
+
+        console.error(
+          'AI Search:',
+          error
+        );
+
+
+        results.innerHTML =
+          '<p>Unable to connect to search service.</p>';
+
+      }
+
+    }
+  );
 
 })();
