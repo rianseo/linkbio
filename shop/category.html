@@ -25,9 +25,11 @@
 <meta content='Digital Creator & Blogger Specialist providing professional Blogger template customization, responsive web design, speed optimization, and SEO setup worldwide.' name='twitter:description'/>
 <meta content='https://rianseo.site/shop/category' name='twitter:url'/>
 <meta content='https://res.cloudinary.com/rianseo-com/image/upload/v1790984124/rianseo-sampul_z8fgkd.png' name='twitter:image'/>	
-<link rel="stylesheet" href="/style.css?v=4"/>	
+<link rel="stylesheet" href="/style.css?v=4"/>
+<link rel="stylesheet" href="/shop.css?v=1"/>	
 </head>
 <body>
+	<input class='search n' id='search' type='checkbox'/>
 	<script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -109,10 +111,10 @@
               <svg fill='none' height='22' stroke='currentColor' stroke-width='1.5' viewBox='0 0 24 24' width='22'><g transform='translate(2.400000, 2.000000)'><line x1='6.6787' x2='12.4937' y1='14.1354' y2='14.1354'/><path d='M1.24344979e-14,11.713 C1.24344979e-14,6.082 0.614,6.475 3.919,3.41 C5.365,2.246 7.615,0 9.558,0 C11.5,0 13.795,2.235 15.254,3.41 C18.559,6.475 19.172,6.082 19.172,11.713 C19.172,20 17.213,20 9.586,20 C1.959,20 1.24344979e-14,20 1.24344979e-14,11.713 Z'/></g></svg>
               <span>Home</span>
               </a></li>
-            <li><a href='#search'>
+            <li><label for='search'>
               <svg fill='none' height='22' stroke='currentColor' stroke-width='1.5' viewBox='0 0 24 24' width='22'><g transform='translate(2.000000, 2.000000)'><circle cx='9.76659044' cy='9.76659044' r='8.9885584'/><line x1='16.0183067' x2='19.5423342' y1='16.4851259' y2='20.0000001'/></g></svg>
               <span>Search</span>
-              </a>
+              </label>
             </li>
             </ul>
           </div>
@@ -158,6 +160,124 @@
 		</footer>
       
   </div>
+  </div>
+
+	<div class='search-form'>
+   <label class='search-overlay' for='search'><!-- item --></label>
+  <div class='search-container'>
+    <div class='ai-search'>
+  <form id='aiSearchForm'>
+    <div class='search-grid'>
+    <label class='back-menu' for='search'>
+    <svg class='icon-search-back' fill='currentColor' height='24' viewBox='0 0 24 24' width='24'><path d='M20 11H5.39l5.3-5.29a1.004 1.004 0 00-1.42-1.42l-7.1 7.1a1 1 0 000 1.42l7.1 7.1a1 1 0 00.71.29.998.998 0 00.71-1.71L5.19 13H20a1 1 0 100-2z'/></svg>
+    </label>
+    <input autocomplete='off' id='aiSearchInput' placeholder='e.g. How to Build...' type='search'/>
+    <button aria-label='Search' type='submit'><svg fill='none' height='22' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24' width='22'><g transform='translate(2.000000, 2.000000)'><circle cx='9.76659044' cy='9.76659044' r='8.9885584'/><line x1='16.0183067' x2='19.5423342' y1='16.4851259' y2='20.0000001'/></g></svg></button>
+    </div>
+  </form>
+  <div class='search-live'>
+    <div class='search-widget'>
+    <div id='aiSearchResults'/>
+      <h3 class='title'>Quick Action</h3>
+      <ul>
+        <li>
+          <a class='link-search' href='https://www.whatsapp.com/catalog/6285886624531'>
+            <div class='bio-icon'>
+    <svg fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24' width='24'><g transform='translate(2.000000, 2.000000)'><path d='M0.75,10.0001 C0.75,16.9371 3.063,19.2501 10,19.2501 C16.937,19.2501 19.25,16.9371 19.25,10.0001 C19.25,3.0631 16.937,0.7501 10,0.7501 C3.063,0.7501 0.75,3.0631 0.75,10.0001 Z'/><polygon points='6.6978 13.3023 8.2718 8.2723 13.3018 6.6983 11.7278 11.7273'/></g></svg>
+  </div>
+            <span>WhatsApp Shop</span>
+            <div class='item-visit'>
+              <svg fill='none' height='16' stroke='#87e64b' stroke-width='1.8' viewBox='0 0 24 24' width='16'>
+                  <path d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' stroke-linecap='round' stroke-linejoin='round'/>
+                </svg>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class='link-search' href='https://store.temabanua.com'>
+            <div class='bio-icon'>
+    <svg fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24' width='24'><g transform='translate(3.650200, 2.850200)'><path d='M2.044,3.58024493 C7.3705141,2.243 13.9926469,2.32498848 15.5231061,4.06777179 C17.0535652,5.8105551 17.0220031,11.638 15.2330031,13.237 C13.4450031,14.836 5.68,14.988 3.22,13.237 C0.621,11.386 2.129,5.692 2.044,2.243 C2.095,0.313 -1.13686838e-13,0 -1.13686838e-13,0'/><line x1='10.5059' x2='13.2789' y1='7.8696' y2='7.8696'/><path d='M3.6138,17.2773 C3.9138,17.2773 4.1578,17.5213 4.1578,17.8213 C4.1578,18.1223 3.9138,18.3663 3.6138,18.3663 C3.3128,18.3663 3.0688,18.1223 3.0688,17.8213 C3.0688,17.5213 3.3128,17.2773 3.6138,17.2773 Z'/><path d='M13.9453,17.2773 C14.2463,17.2773 14.4903,17.5213 14.4903,17.8213 C14.4903,18.1223 14.2463,18.3663 13.9453,18.3663 C13.6453,18.3663 13.4013,18.1223 13.4013,17.8213 C13.4013,17.5213 13.6453,17.2773 13.9453,17.2773 Z'/></g></svg>
+  </div>
+            <span>Marketpleace Templates</span>
+            <div class='item-visit'>
+              <svg fill='none' height='16' stroke='#87e64b' stroke-width='1.8' viewBox='0 0 24 24' width='16'>
+                  <path d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' stroke-linecap='round' stroke-linejoin='round'/>
+                </svg>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class='link-search' href='https://www.instagram.com/rian_seo/reels/'>
+            <div class='bio-icon'>
+    <svg fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24' width='24'><g transform='translate(2.000000, 2.000000)'><path d='M0.75,10.0001 C0.75,16.9371 3.063,19.2501 10,19.2501 C16.937,19.2501 19.25,16.9371 19.25,10.0001 C19.25,3.0631 16.937,0.7501 10,0.7501 C3.063,0.7501 0.75,3.0631 0.75,10.0001 Z'/><path d='M13.416,9.8555 C13.416,8.9515 8.832,6.0595 8.312,6.5795 C7.793,7.0995 7.742,12.5625 8.312,13.1315 C8.883,13.7025 13.416,10.7595 13.416,9.8555 Z'/></g></svg>
+  </div>
+            <span>Video Templates</span>
+            <div class='item-visit'>
+              <svg fill='none' height='16' stroke='#87e64b' stroke-width='1.8' viewBox='0 0 24 24' width='16'>
+                  <path d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' stroke-linecap='round' stroke-linejoin='round'/>
+                </svg>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class='link-search' href='https://api.whatsapp.com/send?phone=6285886624531&amp;text=Halo%20Rian%2C%20saya%20tertarik%20untuk%20membuat%20custom%20Blogger%20Template.%20Saya%20ingin%20mendiskusikan%20kebutuhan%2C%20konsep%20desain%2C%20dan%20fitur%20yang%20saya%20perlukan.'>
+            <div class='bio-icon'>
+    <svg fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24' width='24'><g transform='translate(2.750200, 2.450300)'><line x1='9.2109' x2='9.2109' y1='14.0665' y2='11.4385'/><path d='M18.3393,9.0274 L18.3103,9.0484 C15.8883,10.5404 12.6903,11.4414 9.2063,11.4414 C5.7223,11.4414 2.5333,10.5404 0.1123,9.0484 L0.0823,9.0274'/><path d='M-2.14939178e-13,10.9004 C-2.14939178e-13,4.7484 2.303,2.6974 9.211,2.6974 C16.12,2.6974 18.422,4.7484 18.422,10.9004 C18.422,17.0524 16.12,19.1034 9.211,19.1034 C2.303,19.1034 -2.14939178e-13,17.0524 -2.14939178e-13,10.9004 Z'/><path d='M12.4736,2.919 L12.4736,2.289 C12.4736,1.025 11.5506,-8.8817842e-15 10.4136,-8.8817842e-15 L8.0086,-8.8817842e-15 C6.8716,-8.8817842e-15 5.9486,1.025 5.9486,2.289 L5.9486,2.919'/></g></svg>
+  </div>
+            <span>Need a Costum Website?</span>
+            <div class='item-visit'>
+              <svg fill='none' height='16' stroke='#87e64b' stroke-width='1.8' viewBox='0 0 24 24' width='16'>
+                  <path d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' stroke-linecap='round' stroke-linejoin='round'/>
+                </svg>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class='link-search' href='https://www.behance.net/rianseo'>
+            <div class='bio-icon'>
+    <svg fill='currentColor' height='20' viewBox='0 0 32 32' width='20'><g><path d='M13.09,15.65A5.49,5.49,0,0,0,9.5,6H3A1,1,0,0,0,2,7V25a1,1,0,0,0,1,1h7.5a5.5,5.5,0,0,0,2.59-10.35ZM4,8H9.5a3.5,3.5,0,0,1,0,7H4Zm6.5,16H4V17h6.5a3.5,3.5,0,0,1,0,7Z'/><path d='M23.5,13a6.5,6.5,0,0,0,0,13c4.05,0,5.33-2.26,5.38-2.35a1,1,0,0,0-.4-1.36,1,1,0,0,0-1.36.4S26.28,24,23.5,24a4.5,4.5,0,0,1-4.38-3.5H29a1,1,0,0,0,1-1A6.51,6.51,0,0,0,23.5,13Zm0,2a4.5,4.5,0,0,1,4.38,3.5H19.12A4.5,4.5,0,0,1,23.5,15Z'/><path d='M21,11h6a1,1,0,0,0,0-2H21a1,1,0,0,0,0,2Z'/></g></svg>
+  </div>
+            <span>Portfolio Projects</span>
+            <div class='item-visit'>
+              <svg fill='none' height='16' stroke='#87e64b' stroke-width='1.8' viewBox='0 0 24 24' width='16'>
+                  <path d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' stroke-linecap='round' stroke-linejoin='round'/>
+                </svg>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class='link-search' href='https://github.com/rianseo/linkbio'>
+            <div class='bio-icon'>
+    <svg fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24' width='24'><g transform='translate(2.449500, 2.350000)'><polyline points='4.4676 12.5039 7.4606 8.6149 10.8746 11.2949 13.8036 7.5149'/><path d='M17.2176,2.48689958e-14 C18.2796,2.48689958e-14 19.1396,0.86 19.1396,1.922 C19.1396,2.983 18.2796,3.844 17.2176,3.844 C16.1556,3.844 15.2956,2.983 15.2956,1.922 C15.2956,0.86 16.1556,2.48689958e-14 17.2176,2.48689958e-14 Z'/><path d='M18.306,6.919 C18.439,7.814 18.5,8.822 18.5,9.953 C18.5,16.891 16.188,19.203 9.25,19.203 C2.313,19.203 0,16.891 0,9.953 C0,3.016 2.313,0.703 9.25,0.703 C10.36,0.703 11.351,0.762 12.233,0.89'/></g></svg>
+  </div>
+            <span>Releases Projects</span>
+            <div class='item-visit'>
+              <svg fill='none' height='16' stroke='#87e64b' stroke-width='1.8' viewBox='0 0 24 24' width='16'>
+                  <path d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' stroke-linecap='round' stroke-linejoin='round'/>
+                </svg>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+      <div class='search-footer'>
+        <div class='n-flex'>
+          <div class='c-bm'>
+          <kbd class='d'>&#8593;</kbd>
+          <kbd class='d'>&#8595;</kbd>
+          </div>
+        <span>to navigate</span>
+        </div>
+        <div class='n-flex'>
+          <div class='c-bm'>
+          <kbd class='d'>&#8629;</kbd>
+          </div>
+        <span>to select</span>
+        </div>
+        </div>
+</div>
+    </div>
   </div>
 	<script type="text/javascript" async="" src="/shop/shop.js?=v6"></script>
   </body>
