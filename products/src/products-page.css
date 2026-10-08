@@ -12,7 +12,7 @@ html{line-height:1.15;-webkit-text-size-adjust:100%}
   position: relative;
   overflow: hidden;touch-action: pan-y;
 }
-
+.product-sales {font-size:12px;margin-top:6px;line-height:1;}
 .product-slide {
   opacity: 0;
   visibility: hidden;
