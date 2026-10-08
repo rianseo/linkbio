@@ -8,7 +8,13 @@
     return;
   }
 
-  const products = [
+  /*
+   * Product items
+   */
+  const PRODUCT_API =
+    'https://sales.rianseo.workers.dev/api/products';
+  
+ /* const products = [
     'mrv',
     'iqone',
     'linkbio',
