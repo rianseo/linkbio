@@ -1,0 +1,18 @@
+
+{
+  "name": "MRV",
+  "category": "Landing Pages",
+  "price": "$8.95",
+  "oldPrice": "$21.95",
+  "description": [
+    "MRV is built with a clean HTML5 structure, modern CSS3, and lightweight JavaScript to ensure fast performance and full responsiveness across all devices. Its flexible and elegant design allows it to adapt to various industries.",
+    "From an SEO perspective, MRV is optimized with a clear heading structure, search-engine-friendly markup, and optimized loading speed. This helps websites get indexed more easily by Google and improves their chances of ranking higher in search results."
+  ],
+  "images": [
+    "https://public-files.gumroad.com/tz1tmr060rtoqhoz0vird3o5vk1z",
+    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg1P2wWXU_0DCNS5m7CvrVsdZgLKxpRQsqSda4KKtRcOGAUSP1EMPJv2OaukzBIO7KeofCxD-jgL_H9gpEeMyaGNjZFBo6I6Euh5YT87g-RygJj5rq2wpaED3NXy4b6rma5FSHf8QN7KKVxzIL09vjw6UJCC5ZQGPNktU61OCsLStd-DLqHh7nISL29lhA/w590-h300-p-k-no-nu/NStore_New_Version_4_0_0.jpg",
+    "https://public-files.gumroad.com/nrp11ow3v7584u6mx5zk7o6xc8ms"
+  ],
+  "demo": "https://mrv-banua.blogspot.com/",
+  "buy": "https://buy.temabanua.com/checkout/buy/82125fb1-7a63-4639-a3c9-42638cb426f9"
+}
