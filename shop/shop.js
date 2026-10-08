@@ -450,7 +450,7 @@
 
     return `
       <article class="ai-search-item">
-
+<a href="${escapeHTML(url)}" title="${escapeHTML(name)}">
         ${
           image
             ? `
@@ -470,17 +470,9 @@
 
 
         <div class="ai-search-content">
-
-          <div class="ai-search-category">
-            ${escapeHTML(category)}
-          </div>
-
-
           <h3>
             ${escapeHTML(name)}
           </h3>
-
-
           ${
             description
               ? `
@@ -508,15 +500,8 @@
 
           </div>
 
-
-          <a
-            class="ai-search-view"
-            href="${escapeHTML(url)}">
-            View Product
-          </a>
-
         </div>
-
+</a>
       </article>
     `;
 
