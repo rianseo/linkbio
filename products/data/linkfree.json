@@ -1,0 +1,26 @@
+{
+  "name": "Linkfree",
+  "category": "Biolink",
+  "price": "$8.95",
+  "oldPrice": "$21.95",
+  "description": [
+    "Blogger Themes are passionately created by our trusted and experienced Elite Authors.",
+    "More Details : https://linkfree-bio.blogspot.com/"
+  ],
+  "features": [
+    "SEO Frendly",
+    "Built without using JavaScript",
+    "Purely made HTML5 & CSS",
+    "Video iframe widgets from Youtube.",
+    "Music iframe widgets from Spotify & SoundCloud",
+    "No code required",
+    "Share button using QR code"
+  ],
+  "images": [
+    "https://public-files.gumroad.com/9lfnz9d3hq70diznhkznngqmhb7m",
+    "https://public-files.gumroad.com/lq9ytgu645kh1dqoi02pasq3h32b"
+  ],
+  "demo": "https://linkfree-bio.blogspot.com/",
+  "buy": "https://buy.temabanua.com/buy/a1d0d025-d79d-4e6a-acb5-6b13b0413522?enabled=817184",
+  "gumroadPermalink": "linkfree"
+}
