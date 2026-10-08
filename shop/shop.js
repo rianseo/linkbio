@@ -2,231 +2,277 @@
 
   'use strict';
 
-  const productList = document.getElementById('product-list');
+  const productList =
+    document.getElementById('product-list');
 
   if (!productList) {
     return;
   }
 
-  /*
-   * Product items
-   */
   const PRODUCT_API =
     'https://sales.rianseo.workers.dev/api/products';
-  
- /* const products = [
-    'mrv',
-    'iqone',
-    'linkbio',
-    'nstore'
-  ];
 
   /*
    * Product animation
    */
   function initProductAnimation() {
 
-    const animatedItems = productList.querySelectorAll('.product-card');
+    const animatedItems =
+      productList.querySelectorAll('.product-card');
 
     if (!animatedItems.length) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      function (entries) {
+    const observer =
+      new IntersectionObserver(
+        function (entries) {
 
-        entries.forEach(function (entry) {
+          entries.forEach(function (entry) {
 
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
+            if (entry.isIntersecting) {
 
-        });
+              entry.target.classList.add(
+                'is-visible'
+              );
 
-      },
-      {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px'
+              observer.unobserve(
+                entry.target
+              );
+
+            }
+
+          });
+
+        },
+        {
+          threshold: 0.15,
+          rootMargin: '0px 0px -40px 0px'
+        }
+      );
+
+    animatedItems.forEach(
+      function (item, index) {
+
+        item.style.transitionDelay =
+          (index * 0.08) + 's';
+
+        observer.observe(item);
+
       }
     );
-
-    animatedItems.forEach(function (item, index) {
-
-      item.style.transitionDelay = (index * 0.08) + 's';
-
-      observer.observe(item);
-
-    });
 
   }
 
 
   /*
-   * Load products
+   * Load product list automatically
    */
-  Promise.all(
+  fetch(PRODUCT_API)
 
-    products.map(function (slug) {
+    .then(function (response) {
 
-      return fetch('/products/data/' + slug + '.json')
+      if (!response.ok) {
 
-        .then(function (response) {
+        throw new Error(
+          'Unable to load product list'
+        );
 
-          if (!response.ok) {
+      }
 
-            throw new Error(
-              'Product data not found: ' + slug
-            );
-
-          }
-
-          return response.json();
-
-        })
-
-        .then(function (data) {
-
-          return {
-            slug: slug,
-            data: data
-          };
-
-        });
+      return response.json();
 
     })
 
-  )
+    .then(function (result) {
 
-  .then(function (items) {
+      if (
+        !result.success ||
+        !Array.isArray(result.products) ||
+        !result.products.length
+      ) {
 
-    productList.innerHTML = items.map(function (item) {
+        throw new Error(
+          'No products found'
+        );
 
-      const product = item.data;
+      }
 
-      const image =
-        Array.isArray(product.images) &&
-        product.images.length
-          ? product.images[0]
-          : '';
+      return Promise.all(
 
-      const description =
-        Array.isArray(product.description)
-          ? product.description[0]
-          : (product.description || '');
+        result.products.map(
+          function (slug) {
 
-      /*
-       * Price
-       */
-      const price =
-        product.price !== undefined &&
-        product.price !== null
-          ? product.price
-          : '';
+            return fetch(
+              '/products/data/' +
+              slug +
+              '.json'
+            )
 
-      /*
-       * Old price
-       */
-      const oldPrice =
-        product.oldPrice !== undefined &&
-        product.oldPrice !== null &&
-        String(product.oldPrice).trim() !== ''
-          ? product.oldPrice
-          : '';
+              .then(function (response) {
 
-      /*
-       * Old price HTML
-       */
-      const oldPriceHTML = oldPrice
-        ? `<strike class='off-price'>${oldPrice}</strike>`
-        : '';
+                if (!response.ok) {
 
-      return `
-        <article class='product-card'>
+                  throw new Error(
+                    'Product data not found: ' +
+                    slug
+                  );
 
-          <a href='/products/${item.slug}' title='${product.name || ''}'>
+                }
 
-            <div class='product-image'>
+                return response.json();
 
-              <img
-                alt='${product.name || ''}'
-                decoding='async'
-                loading='lazy'
-                src='${image}'
-              />
+              })
 
-              <span class='product-category'>
-                ${product.category || 'Theme'}
-              </span>
+              .then(function (data) {
 
-            </div>
+                return {
+                  slug: slug,
+                  data: data
+                };
 
-            <div class='product-content'>
+              });
 
-              <div class='entry-meta'>
+          }
+        )
 
-                <div class='entry-title'>
-                  <h2>${product.name || ''}</h2>
+      );
+
+    })
+
+    .then(function (items) {
+
+      productList.innerHTML =
+        items.map(function (item) {
+
+          const product =
+            item.data;
+
+          const image =
+            Array.isArray(product.images) &&
+            product.images.length
+              ? product.images[0]
+              : '';
+
+          const description =
+            Array.isArray(product.description)
+              ? product.description[0]
+              : (product.description || '');
+
+          /*
+           * Price
+           */
+          const price =
+            product.price !== undefined &&
+            product.price !== null
+              ? product.price
+              : '';
+
+          /*
+           * Old price
+           */
+          const oldPrice =
+            product.oldPrice !== undefined &&
+            product.oldPrice !== null &&
+            String(product.oldPrice).trim() !== ''
+              ? product.oldPrice
+              : '';
+
+          /*
+           * Old price HTML
+           */
+          const oldPriceHTML =
+            oldPrice
+              ? `<strike class='off-price'>${oldPrice}</strike>`
+              : '';
+
+          return `
+            <article class='product-card'>
+
+              <a
+                href='/products/${item.slug}'
+                title='${product.name || ''}'>
+
+                <div class='product-image'>
+
+                  <img
+                    alt='${product.name || ''}'
+                    decoding='async'
+                    loading='lazy'
+                    src='${image}'
+                  />
+
+                  <span class='product-category'>
+                    ${product.category || 'Theme'}
+                  </span>
+
                 </div>
 
-                <div class='product-price'>
+                <div class='product-content'>
 
-                  <strong class='item-price'>
-                    ${price}
-                  </strong>
+                  <div class='entry-meta'>
 
-                  ${oldPriceHTML}
+                    <div class='entry-title'>
+                      <h2>
+                        ${product.name || ''}
+                      </h2>
+                    </div>
+
+                    <div class='product-price'>
+
+                      <strong class='item-price'>
+                        ${price}
+                      </strong>
+
+                      ${oldPriceHTML}
+
+                    </div>
+
+                  </div>
+
+                  <div class='entry-more'>
+
+                    <svg
+                      fill='none'
+                      height='16'
+                      stroke='currentColor'
+                      stroke-width='1.8'
+                      viewBox='0 0 24 24'
+                      width='16'>
+
+                      <path
+                        d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25'
+                        stroke-linecap='round'
+                        stroke-linejoin='round'/>
+
+                    </svg>
+
+                  </div>
 
                 </div>
 
-              </div>
+              </a>
 
-              <div class='entry-more'>
+            </article>
+          `;
 
-                <svg
-                  fill='none'
-                  height='16'
-                  stroke='currentColor'
-                  stroke-width='1.8'
-                  viewBox='0 0 24 24'
-                  width='16'>
+        }).join('');
 
-                  <path
-                    d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'/>
+      /*
+       * Product animation
+       */
+      initProductAnimation();
 
-                </svg>
+    })
 
-              </div>
+    .catch(function (error) {
 
-            </div>
+      console.error(error);
 
-          </a>
+      productList.innerHTML =
+        '<p>Unable to load products.</p>';
 
-        </article>
-      `;
-
-    }).join('');
-
-
-    /*
-     * IMPORTANT:
-     * Jalankan observer setelah product-card
-     * sudah masuk ke DOM.
-     */
-    initProductAnimation();
-
-  })
-
-  .catch(function (error) {
-
-    console.error(error);
-
-    productList.innerHTML =
-      '<p>Unable to load products.</p>';
-
-  });
+    });
 
 })();
 
