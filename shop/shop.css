@@ -7,7 +7,34 @@
     .container .widget_bottom {z-index:99!important}
     
     .n {display:none;}
-    
+
+.ai-search-item {display: flex;
+    gap: 16px;
+    margin: 0 0 24px;}
+.ai-search-image {flex: 0 0 65px;
+    height: 65px;
+    width: fit-content;
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    border-radius: 24px;}
+.ai-search-content {display: flex;
+    flex-direction: column;}
+.search-form .ai-search-content h3 {margin: 0;
+    padding: 0;
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;}
+.ai-search-content p {margin: 4px 0;
+    font-size: 14px;
+    color: #ccc;
+    font-weight: 400;
+    line-height: 1.188rem;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;}
+
     label {cursor:pointer;outline:none;}
     
     .main-nav label {border-radius: 16px;
