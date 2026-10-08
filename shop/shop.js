@@ -224,6 +224,7 @@
 })();
 
 
+/* Search JS AI */
 (function () {
 
   'use strict';
@@ -256,7 +257,7 @@
 
 
   /*
-   * Extract product slug
+   * Get product slug from Product URL
    *
    * Example:
    * https://rianseo.site/products/linkbio
@@ -281,6 +282,11 @@
 
     } catch (error) {
 
+      console.error(
+        'Invalid product URL:',
+        url
+      );
+
       return '';
 
     }
@@ -299,17 +305,22 @@
 
     try {
 
-      const response = await fetch(
-        '/products/data/' +
-        encodeURIComponent(slug) +
-        '.json'
-      );
+      const response =
+        await fetch(
+          '/products/data/' +
+          encodeURIComponent(slug) +
+          '.json'
+        );
+
 
       if (!response.ok) {
+
         throw new Error(
           'Product data not found: ' + slug
         );
+
       }
+
 
       return await response.json();
 
@@ -329,7 +340,7 @@
 
 
   /*
-   * Product card
+   * Create product card
    */
   function createProductCard(product, url) {
 
@@ -353,6 +364,12 @@
         : '';
 
 
+    const description =
+      Array.isArray(product.description)
+        ? product.description[0]
+        : (product.description || '');
+
+
     const price =
       product.price !== undefined &&
       product.price !== null
@@ -370,88 +387,82 @@
 
     const oldPriceHTML =
       oldPrice
-        ? `<strike class="off-price">${escapeHTML(oldPrice)}</strike>`
+        ? `
+          <strike class="off-price">
+            ${escapeHTML(oldPrice)}
+          </strike>
+        `
         : '';
-
-
-    const description =
-      Array.isArray(product.description)
-        ? product.description[0]
-        : (product.description || '');
 
 
     return `
       <article class="ai-search-item">
 
-        <a
-          class="ai-search-link"
-          href="${escapeHTML(url)}"
-          title="${escapeHTML(name)}">
+        ${
+          image
+            ? `
+              <div class="ai-search-image">
+
+                <img
+                  src="${escapeHTML(image)}"
+                  alt="${escapeHTML(name)}"
+                  loading="lazy"
+                  decoding="async"
+                />
+
+              </div>
+            `
+            : ''
+        }
+
+
+        <div class="ai-search-content">
+
+          <div class="ai-search-category">
+            ${escapeHTML(category)}
+          </div>
+
+
+          <h3>
+            ${escapeHTML(name)}
+          </h3>
+
 
           ${
-            image
+            description
               ? `
-                <div class="ai-search-image">
-
-                  <img
-                    src="${escapeHTML(image)}"
-                    alt="${escapeHTML(name)}"
-                    loading="lazy"
-                    decoding="async"
-                  />
-
-                </div>
+                <p>
+                  ${escapeHTML(description)}
+                </p>
               `
               : ''
           }
 
 
-          <div class="ai-search-content">
-
-            <div class="ai-search-category">
-              ${escapeHTML(category)}
-            </div>
-
-            <h3>
-              ${escapeHTML(name)}
-            </h3>
-
+          <div class="ai-search-price">
 
             ${
-              description
+              price
                 ? `
-                  <p>
-                    ${escapeHTML(description)}
-                  </p>
+                  <strong class="item-price">
+                    ${escapeHTML(price)}
+                  </strong>
                 `
                 : ''
             }
 
-
-            <div class="ai-search-price">
-
-              ${
-                price
-                  ? `
-                    <strong class="item-price">
-                      ${escapeHTML(price)}
-                    </strong>
-                  `
-                  : ''
-              }
-
-              ${oldPriceHTML}
-
-            </div>
-
-
-            <span class="ai-search-view">
-              View Product
-            </span>
+            ${oldPriceHTML}
 
           </div>
 
-        </a>
+
+          <a
+            class="ai-search-view"
+            href="${escapeHTML(url)}">
+            View Product
+          </a>
+
+        </div>
 
       </article>
     `;
@@ -460,7 +471,7 @@
 
 
   /*
-   * Search
+   * Search form
    */
   form.addEventListener(
     'submit',
@@ -483,6 +494,9 @@
       }
 
 
+      /*
+       * Loading
+       */
       results.innerHTML =
         '<span>Searching...</span>';
 
@@ -490,8 +504,11 @@
       try {
 
         /*
-         * Request AI Search
+         * =========================
+         * AI SEARCH REQUEST
+         * =========================
          */
+
         const response =
           await fetch(
             SEARCH_API +
@@ -503,7 +520,8 @@
         if (!response.ok) {
 
           throw new Error(
-            'Search request failed'
+            'Search request failed: ' +
+            response.status
           );
 
         }
@@ -542,8 +560,11 @@
 
 
         /*
-         * Load all product JSON files
+         * =========================
+         * LOAD PRODUCT DATA
+         * =========================
          */
+
         const productPromises =
           chunks.map(
             async function (chunk) {
@@ -553,7 +574,7 @@
 
 
               /*
-               * Find Product URL
+               * Extract Product URL
                */
               const urlMatch =
                 text.match(
@@ -562,7 +583,14 @@
 
 
               if (!urlMatch) {
+
+                console.warn(
+                  'Product URL not found:',
+                  text
+                );
+
                 return null;
+
               }
 
 
@@ -570,21 +598,31 @@
                 urlMatch[2];
 
 
+              /*
+               * Extract slug
+               */
               const slug =
                 getProductSlug(url);
 
 
               if (!slug) {
+
                 return null;
+
               }
 
 
+              /*
+               * Load post.json
+               */
               const product =
                 await loadProduct(slug);
 
 
               if (!product) {
+
                 return null;
+
               }
 
 
@@ -609,7 +647,9 @@
         const validProducts =
           products.filter(
             function (item) {
+
               return item !== null;
+
             }
           );
 
@@ -625,8 +665,11 @@
 
 
         /*
-         * Render
+         * =========================
+         * RENDER RESULTS
+         * =========================
          */
+
         results.innerHTML =
           validProducts
             .map(function (item) {
