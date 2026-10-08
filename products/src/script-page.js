@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const productCategory = document.querySelector('.product-category');
   const itemPrice = document.querySelector('.item-price');
   const offPrice = document.querySelector('.off-price');
-  const productPrice = document.querySelector('.product-price');
+  const productPrice = document.querySelector('.content-price');
   const productDescription = document.querySelector('.product-description');
   const productImages = document.querySelector('.product-image');
   const demoButton = document.querySelector('.icon-buy');
