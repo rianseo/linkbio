@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const productCategory = document.querySelector('.product-category');
   const itemPrice = document.querySelector('.item-price');
   const offPrice = document.querySelector('.off-price');
+  const productPrice = document.querySelector('.product-price');
   const productDescription = document.querySelector('.product-description');
   const productImages = document.querySelector('.product-image');
   const demoButton = document.querySelector('.icon-buy');
@@ -27,123 +28,374 @@ document.addEventListener('DOMContentLoaded', function () {
    *      nstore
    */
 
-const productSlug = document.body.dataset.productSlug || null;
+  const productSlug =
+    document.body.dataset.productSlug || null;
 
-if (!productSlug) {
-  console.error('Product slug not found.');
-  return;
-}
+  if (!productSlug) {
+    console.error('Product slug not found.');
+    return;
+  }
 
-fetch('/products/data/' + productSlug + '.json')
-  .then(function (response) {
-    if (!response.ok) {
-      throw new Error('Product data not found: ' + productSlug);
-    }
 
-    return response.json();
-  })
-  
+  /*
+   * ==========================================
+   * LOAD PRODUCT DATA
+   * ==========================================
+   */
+
+  fetch('/products/data/' + productSlug + '.json')
+
+    .then(function (response) {
+
+      if (!response.ok) {
+
+        throw new Error(
+          'Product data not found: ' + productSlug
+        );
+
+      }
+
+      return response.json();
+
+    })
+
     .then(function (product) {
 
+
       /*
+       * ==========================================
        * PRODUCT INFO
+       * ==========================================
        */
 
       if (productName) {
-        productName.textContent = product.name || '';
+        productName.textContent =
+          product.name || '';
       }
 
       if (productCategory) {
-        productCategory.textContent = product.category || '';
+        productCategory.textContent =
+          product.category || '';
       }
 
       if (itemPrice) {
-        itemPrice.textContent = product.price || '';
+        itemPrice.textContent =
+          product.price || '';
       }
 
       if (offPrice) {
-        offPrice.textContent = product.oldPrice || '';
+        offPrice.textContent =
+          product.oldPrice || '';
       }
 
+
       /*
+       * ==========================================
+       * GUMROAD SALES
+       * ==========================================
+       *
+       * Menggunakan Gumroad permalink
+       * dari post.json
+       *
+       * Contoh:
+       *
+       * "gumroadPermalink": "iqone"
+       *
+       */
+
+      if (
+        productPrice &&
+        product.gumroadPermalink
+      ) {
+
+        fetch(
+          'https://sales.rianseo.workers.dev/api/sales'
+        )
+
+          .then(function (response) {
+
+            if (!response.ok) {
+
+              throw new Error(
+                'Unable to load Gumroad sales'
+              );
+
+            }
+
+            return response.json();
+
+          })
+
+          .then(function (salesData) {
+
+            if (
+              !salesData.success ||
+              !Array.isArray(
+                salesData.products
+              )
+            ) {
+              return;
+            }
+
+
+            /*
+             * Cari produk berdasarkan
+             * Gumroad permalink
+             */
+
+            const gumroadPermalink =
+              String(
+                product.gumroadPermalink
+              )
+                .trim()
+                .toLowerCase();
+
+
+            const gumroadProduct =
+              salesData.products.find(
+                function (item) {
+
+                  return String(
+                    item.permalink || ''
+                  )
+                    .trim()
+                    .toLowerCase() ===
+                    gumroadPermalink;
+
+                }
+              );
+
+
+            /*
+             * Produk Gumroad tidak ditemukan
+             */
+
+            if (!gumroadProduct) {
+              return;
+            }
+
+
+            /*
+             * Ambil jumlah sales
+             */
+
+            const sales =
+              Number(
+                gumroadProduct.sales || 0
+              );
+
+
+            /*
+             * Hapus sales lama
+             * jika ada
+             */
+
+            const existingSales =
+              productPrice.parentNode
+                .querySelector(
+                  '.product-sales'
+                );
+
+            if (existingSales) {
+              existingSales.remove();
+            }
+
+
+            /*
+             * Buat elemen sales
+             */
+
+            const salesElement =
+              document.createElement('div');
+
+            salesElement.className =
+              'product-sales';
+
+
+            salesElement.textContent =
+              sales === 1
+                ? '1 Sale'
+                : sales + ' Sales';
+
+
+            /*
+             * Letakkan tepat di bawah
+             * harga produk
+             */
+
+            productPrice.insertAdjacentElement(
+              'afterend',
+              salesElement
+            );
+
+          })
+
+          .catch(function (error) {
+
+            /*
+             * Sales gagal tidak boleh
+             * mengganggu halaman produk
+             */
+
+            console.error(
+              'Gumroad sales:',
+              error
+            );
+
+          });
+
+      }
+
+
+      /*
+       * ==========================================
        * DESCRIPTION
+       * ==========================================
        */
 
       if (productDescription) {
 
         productDescription.innerHTML = '';
 
-        if (Array.isArray(product.description)) {
-          product.description.forEach(function (text) {
 
-            const paragraph = document.createElement('p');
+        /*
+         * DESCRIPTION PARAGRAPHS
+         */
 
-            paragraph.textContent = text;
+        if (
+          Array.isArray(
+            product.description
+          )
+        ) {
 
-            productDescription.appendChild(paragraph);
+          product.description.forEach(
+            function (text) {
 
-          });
+              const paragraph =
+                document.createElement('p');
+
+              paragraph.textContent =
+                text;
+
+              productDescription.appendChild(
+                paragraph
+              );
+
+            }
+          );
+
         }
+
 
         /*
          * FEATURES
          */
 
-        if (Array.isArray(product.features) && product.features.length) {
+        if (
+          Array.isArray(product.features) &&
+          product.features.length
+        ) {
 
-          const title = document.createElement('h3');
+          const title =
+            document.createElement('h3');
 
-          title.textContent = 'Fitur :';
+          title.textContent =
+            'Fitur :';
 
-          productDescription.appendChild(title);
+          productDescription.appendChild(
+            title
+          );
 
-          const list = document.createElement('ul');
 
-          product.features.forEach(function (feature) {
+          const list =
+            document.createElement('ul');
 
-            const item = document.createElement('li');
 
-            item.textContent = feature;
+          product.features.forEach(
+            function (feature) {
 
-            list.appendChild(item);
+              const item =
+                document.createElement('li');
 
-          });
+              item.textContent =
+                feature;
 
-          productDescription.appendChild(list);
+              list.appendChild(item);
+
+            }
+          );
+
+
+          productDescription.appendChild(
+            list
+          );
+
         }
+
       }
 
+
       /*
+       * ==========================================
        * PRODUCT IMAGES
+       * ==========================================
        */
 
-      if (productImages && Array.isArray(product.images)) {
+      if (
+        productImages &&
+        Array.isArray(product.images)
+      ) {
 
         productImages.innerHTML = '';
 
-        product.images.forEach(function (image, index) {
 
-          const img = document.createElement('img');
+        product.images.forEach(
+          function (image, index) {
 
-          img.src = image;
-          img.alt = product.name + ' ' + String(index + 1);
+            const img =
+              document.createElement('img');
 
-          productImages.appendChild(img);
+            img.src = image;
 
-        });
+            img.alt =
+              product.name +
+              ' ' +
+              String(index + 1);
+
+            productImages.appendChild(img);
+
+          }
+        );
+
       }
+
 
       /*
+       * ==========================================
        * BUTTONS
+       * ==========================================
        */
 
-      if (demoButton && product.demo) {
-        demoButton.href = product.demo;
+      if (
+        demoButton &&
+        product.demo
+      ) {
+
+        demoButton.href =
+          product.demo;
+
       }
 
-      if (buyButton && product.buy) {
-        buyButton.href = product.buy;
+      if (
+        buyButton &&
+        product.buy
+      ) {
+
+        buyButton.href =
+          product.buy;
+
       }
+
 
       /*
        * Setelah gambar dimasukkan,
@@ -153,6 +405,7 @@ fetch('/products/data/' + productSlug + '.json')
       initProductSlider();
 
     })
+
     .catch(function (error) {
 
       console.error(error);
@@ -168,21 +421,35 @@ fetch('/products/data/' + productSlug + '.json')
 
   function initProductSlider() {
 
-    const slider = document.querySelector('.product-image');
+    const slider =
+      document.querySelector(
+        '.product-image'
+      );
 
     if (!slider) return;
 
-    const images = Array.from(
-      slider.querySelectorAll('img')
-    );
+
+    const images =
+      Array.from(
+        slider.querySelectorAll('img')
+      );
+
 
     if (images.length <= 1) return;
+
 
     /*
      * Hindari slider dibuat dua kali
      */
 
-    if (slider.classList.contains('product-slider')) return;
+    if (
+      slider.classList.contains(
+        'product-slider'
+      )
+    ) {
+      return;
+    }
+
 
     let current = 0;
 
@@ -191,35 +458,55 @@ fetch('/products/data/' + productSlug + '.json')
 
     const threshold = 45;
 
-    slider.classList.add('product-slider');
+
+    slider.classList.add(
+      'product-slider'
+    );
 
 
     /*
      * IMAGE INITIALIZATION
      */
 
-    images.forEach(function (img, index) {
+    images.forEach(
+      function (img, index) {
 
-      img.classList.add('product-slide');
+        img.classList.add(
+          'product-slide'
+        );
 
-      img.draggable = false;
+        img.draggable = false;
 
-      if (index === 0) {
-        img.classList.add('active');
-      } else {
-        img.classList.remove('active');
+
+        if (index === 0) {
+
+          img.classList.add(
+            'active'
+          );
+
+        } else {
+
+          img.classList.remove(
+            'active'
+          );
+
+        }
+
       }
-
-    });
+    );
 
 
     /*
      * PREVIOUS BUTTON
      */
 
-    const prev = document.createElement('button');
+    const prev =
+      document.createElement(
+        'button'
+      );
 
-    prev.className = 'product-slider-prev';
+    prev.className =
+      'product-slider-prev';
 
     prev.type = 'button';
 
@@ -241,9 +528,13 @@ fetch('/products/data/' + productSlug + '.json')
      * NEXT BUTTON
      */
 
-    const next = document.createElement('button');
+    const next =
+      document.createElement(
+        'button'
+      );
 
-    next.className = 'product-slider-next';
+    next.className =
+      'product-slider-next';
 
     next.type = 'button';
 
@@ -269,40 +560,69 @@ fetch('/products/data/' + productSlug + '.json')
      * DOTS
      */
 
-    const dots = document.createElement('div');
-
-    dots.className = 'product-slider-dots';
-
-    images.forEach(function (img, index) {
-
-      const dot = document.createElement('button');
-
-      dot.type = 'button';
-
-      dot.className = 'product-slider-dot';
-
-      dot.setAttribute(
-        'aria-label',
-        'Go to image ' + (index + 1)
+    const dots =
+      document.createElement(
+        'div'
       );
 
-      if (index === 0) {
-        dot.classList.add('active');
+    dots.className =
+      'product-slider-dots';
+
+
+    images.forEach(
+      function (img, index) {
+
+        const dot =
+          document.createElement(
+            'button'
+          );
+
+        dot.type = 'button';
+
+        dot.className =
+          'product-slider-dot';
+
+        dot.setAttribute(
+          'aria-label',
+          'Go to image ' +
+          (index + 1)
+        );
+
+
+        if (index === 0) {
+
+          dot.classList.add(
+            'active'
+          );
+
+        }
+
+
+        dot.addEventListener(
+          'click',
+          function () {
+
+            goToSlide(index);
+
+          }
+        );
+
+
+        dots.appendChild(dot);
+
       }
+    );
 
-      dot.addEventListener('click', function () {
-        goToSlide(index);
-      });
-
-      dots.appendChild(dot);
-
-    });
 
     slider.appendChild(dots);
 
-    const dotItems = Array.from(
-      dots.querySelectorAll('.product-slider-dot')
-    );
+
+    const dotItems =
+      Array.from(
+        dots.querySelectorAll(
+          '.product-slider-dot'
+        )
+      );
 
 
     /*
@@ -311,17 +631,31 @@ fetch('/products/data/' + productSlug + '.json')
 
     function goToSlide(index) {
 
-      images[current].classList.remove('active');
+      images[current]
+        .classList.remove(
+          'active'
+        );
 
-      dotItems[current].classList.remove('active');
+      dotItems[current]
+        .classList.remove(
+          'active'
+        );
+
 
       current =
         (index + images.length) %
         images.length;
 
-      images[current].classList.add('active');
 
-      dotItems[current].classList.add('active');
+      images[current]
+        .classList.add(
+          'active'
+        );
+
+      dotItems[current]
+        .classList.add(
+          'active'
+        );
 
     }
 
@@ -330,13 +664,28 @@ fetch('/products/data/' + productSlug + '.json')
      * BUTTON EVENTS
      */
 
-    prev.addEventListener('click', function () {
-      goToSlide(current - 1);
-    });
+    prev.addEventListener(
+      'click',
+      function () {
 
-    next.addEventListener('click', function () {
-      goToSlide(current + 1);
-    });
+        goToSlide(
+          current - 1
+        );
+
+      }
+    );
+
+
+    next.addEventListener(
+      'click',
+      function () {
+
+        goToSlide(
+          current + 1
+        );
+
+      }
+    );
 
 
     /*
@@ -347,14 +696,23 @@ fetch('/products/data/' + productSlug + '.json')
       'touchstart',
       function (event) {
 
-        if (event.touches.length !== 1) return;
+        if (
+          event.touches.length !== 1
+        ) {
+          return;
+        }
 
-        startX = event.touches[0].clientX;
 
-        startY = event.touches[0].clientY;
+        startX =
+          event.touches[0].clientX;
+
+        startY =
+          event.touches[0].clientY;
 
       },
-      { passive: true }
+      {
+        passive: true
+      }
     );
 
 
@@ -364,32 +722,50 @@ fetch('/products/data/' + productSlug + '.json')
 
         if (!startX) return;
 
+
         const diffX =
-          event.changedTouches[0].clientX -
+          event.changedTouches[0]
+            .clientX -
           startX;
 
+
         const diffY =
-          event.changedTouches[0].clientY -
+          event.changedTouches[0]
+            .clientY -
           startY;
+
 
         if (
           Math.abs(diffX) >= threshold &&
-          Math.abs(diffX) > Math.abs(diffY)
+          Math.abs(diffX) >
+            Math.abs(diffY)
         ) {
 
+
           if (diffX < 0) {
-            goToSlide(current + 1);
+
+            goToSlide(
+              current + 1
+            );
+
           } else {
-            goToSlide(current - 1);
+
+            goToSlide(
+              current - 1
+            );
+
           }
 
         }
+
 
         startX = 0;
         startY = 0;
 
       },
-      { passive: true }
+      {
+        passive: true
+      }
     );
 
 
@@ -401,8 +777,13 @@ fetch('/products/data/' + productSlug + '.json')
       'dragstart',
       function (event) {
 
-        if (event.target.tagName === 'IMG') {
+        if (
+          event.target.tagName ===
+          'IMG'
+        ) {
+
           event.preventDefault();
+
         }
 
       }
@@ -417,18 +798,37 @@ fetch('/products/data/' + productSlug + '.json')
       'keydown',
       function (event) {
 
-        if (event.key === 'ArrowLeft') {
-          goToSlide(current - 1);
+        if (
+          event.key ===
+          'ArrowLeft'
+        ) {
+
+          goToSlide(
+            current - 1
+          );
+
         }
 
-        if (event.key === 'ArrowRight') {
-          goToSlide(current + 1);
+
+        if (
+          event.key ===
+          'ArrowRight'
+        ) {
+
+          goToSlide(
+            current + 1
+          );
+
         }
 
       }
     );
 
-    slider.setAttribute('tabindex', '0');
+
+    slider.setAttribute(
+      'tabindex',
+      '0'
+    );
 
   }
 
@@ -439,41 +839,59 @@ fetch('/products/data/' + productSlug + '.json')
    * ==========================================
    */
 
-  const animatedItems = document.querySelectorAll(
-    '.product-nav, .product-image, .product-content, .product-button'
-  );
+  const animatedItems =
+    document.querySelectorAll(
+      '.product-nav, .product-image, .product-content, .product-button'
+    );
 
-  if (!animatedItems.length) return;
 
-  const observer = new IntersectionObserver(
-    function (entries) {
+  if (!animatedItems.length) {
+    return;
+  }
 
-      entries.forEach(function (entry) {
 
-        if (entry.isIntersecting) {
+  const observer =
+    new IntersectionObserver(
+      function (entries) {
 
-          entry.target.classList.add('is-visible');
+        entries.forEach(
+          function (entry) {
 
-        } else {
+            if (
+              entry.isIntersecting
+            ) {
 
-          entry.target.classList.remove('is-visible');
+              entry.target.classList.add(
+                'is-visible'
+              );
 
-        }
+            } else {
 
-      });
+              entry.target.classList.remove(
+                'is-visible'
+              );
 
-    },
-    {
-      threshold: 0.15,
-      rootMargin: '0px 0px -40px 0px'
+            }
+
+          }
+        );
+
+      },
+      {
+        threshold: 0.15,
+
+        rootMargin:
+          '0px 0px -40px 0px'
+      }
+    );
+
+
+  animatedItems.forEach(
+    function (item) {
+
+      observer.observe(item);
+
     }
   );
-
-
-  animatedItems.forEach(function (item) {
-
-    observer.observe(item);
-
-  });
 
 });
