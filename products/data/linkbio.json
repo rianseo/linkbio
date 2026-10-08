@@ -4,19 +4,23 @@
   "price": "$8.95",
   "oldPrice": "$21.95",
   "description": [
-    "Linkbio adalah template modern dan ringan untuk membuat halaman profile sederhana dan cepat di akses.",
-    "Dirancang semudah mungkin dan seringan mungkin untuk di akses dengan perangkat dan jaringan apapun."
+    "Blogger Themes are passionately created by our trusted and experienced Elite Authors.",
+    "<b>More Details</b> : https://linkfree-bio.blogspot.com/"
   ],
   "features": [
     "SEO Frendly",
-    "Mobile Frendly",
-    "Cepat"
+    "Built without using JavaScript",
+    "Purely made HTML5 & CSS",
+    "Video iframe widgets from Youtube.",
+    "Music iframe widgets from Spotify & SoundCloud",
+    "No code required",
+    "Share button using QR code"
   ],
   "images": [
-    "https://public-files.gumroad.com/6zbc8ykb87wyy04ayvzo6yd3arf7",
-    "https://public-files.gumroad.com/q24ky4eenzmh28ucekcb2twx3ytk",
-    "https://public-files.gumroad.com/nrp11ow3v7584u6mx5zk7o6xc8ms"
+    "https://public-files.gumroad.com/9lfnz9d3hq70diznhkznngqmhb7m",
+    "https://public-files.gumroad.com/lq9ytgu645kh1dqoi02pasq3h32b"
   ],
-  "demo": "#",
-  "buy": "#"
+  "demo": "https://linkfree-bio.blogspot.com/",
+  "buy": "https://buy.temabanua.com/buy/a1d0d025-d79d-4e6a-acb5-6b13b0413522?enabled=817184"
+  "gumroadPermalink": "linkfree"
 }
